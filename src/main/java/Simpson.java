@@ -44,5 +44,6 @@ public class Simpson {
             suma += coeficiente * distribucion.evaluar(i * ancho);
         }
         return (ancho / 3) * suma;
+        
     }
 }
