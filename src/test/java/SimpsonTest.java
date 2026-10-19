@@ -1,7 +1,6 @@
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -15,24 +14,23 @@ public class SimpsonTest {
                 () -> Simpson.integrarConSegmentos(1.1, 9, segmentos));
     }
 
-    private double calcularArchivo(String archivo) throws IOException {
-        double[] datos = ReadFile.leerDatos(archivo);
-        return Simpson.integrar(datos[0], (int) datos[1]);
+    private double calcular(double x, int dof) {
+        return Simpson.integrar(x, dof);
     }
 
     @Test
-    void caso1DelPdf() throws IOException {
-        assertEquals(0.35006, calcularArchivo("datos/test1.txt"), 0.000005);
+    void caso1DelPdf() {
+        assertEquals(0.35006, calcular(1.1, 9), 0.000005);
     }
 
     @Test
-    void caso2DelPdf() throws IOException {
-        assertEquals(0.36757, calcularArchivo("datos/test2.txt"), 0.000005);
+    void caso2DelPdf() {
+        assertEquals(0.36757, calcular(1.1812, 10), 0.000005);
     }
 
     @Test
-    void caso3DelPdf() throws IOException {
-        assertEquals(0.49500, calcularArchivo("datos/test3.txt"), 0.000005);
+    void caso3DelPdf() {
+        assertEquals(0.49500, calcular(2.75, 30), 0.000005);
     }
 
     @Test

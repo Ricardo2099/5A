@@ -11,29 +11,28 @@ Desde la carpeta del repositorio:
 ```text
 cd 5A
 mvn compile
-java -cp target/classes Main datos/test1.txt
-java -cp target/classes Main datos/test2.txt
-java -cp target/classes Main datos/test3.txt
+java -cp target/classes Main 1.1 9
+java -cp target/classes Main 1.1812 10
+java -cp target/classes Main 2.75 30
 ```
 
 Tambien se puede ejecutar mediante Maven:
 
 ```text
-mvn compile exec:java "-Dexec.args=datos/test1.txt"
+mvn compile exec:java "-Dexec.args=1.1812 10"
 ```
 
-Sin argumentos, Main lee `datos/test1.txt`. Se admite cualquier archivo con el
-mismo formato: exactamente dos lineas, primero x con punto decimal y luego dof
-entero. Las rutas son relativas al directorio desde el que se ejecuta el programa.
-La salida se muestra en consola; el programa no escribe ni modifica archivos.
-Ante una entrada invalida o falta de convergencia, muestra el error y termina
-con codigo distinto de cero.
+Main requiere dos argumentos: primero `x` con punto decimal y luego `dof` entero.
+La salida se muestra en consola y se guarda en `resultado.txt` mediante `OutFile`.
+Ante una entrada invalida o falta de convergencia, muestra el error y termina con
+codigo distinto de cero.
 
 ## Clases
 
-- `Main`: selecciona el archivo por argumento y muestra los resultados.
-- `ReadFile`: reutiliza `leerLineas` de 2A/3A y adapta la lectura a dos valores.
-- `DistribucionT`: calcula gamma y la densidad t de Student.
+- `Main`: recibe `x` y `dof` por argumentos y muestra los resultados.
+- `OutFile`: guarda los resultados calculados en `resultado.txt`.
+- `DistribucionT`: calcula la densidad t de Student usando `Gamma`.
+- `Gamma`: calcula gamma manualmente con multiplicaciones; no usa una libreria de gamma.
 - `Simpson`: aplica Simpson y controla la convergencia.
 
 ## Calculos
@@ -86,7 +85,7 @@ En PowerShell:
 Start-Process .\target\site\jacoco\index.html
 ```
 
-Los tres casos obligatorios leen los archivos reales de `datos/` y comparan
+Los tres casos obligatorios pasan directamente los valores de `x` y `dof` y comparan
 contra constantes del PDF con tolerancia 0.000005 (media unidad del quinto
 decimal). Esta tolerancia de comparacion es distinta del criterio de parada
 de Simpson. Hay pruebas adicionales de gamma, valores intermedios del
@@ -94,8 +93,8 @@ Excel/PDF, integral con dof=1, entradas invalidas y limite de iteraciones.
 Cada metodo de prueba contiene exactamente una asercion.
 
 `MainTest` ejecuta el programa en procesos Java separados y comprueba la salida
-y el codigo de terminacion: los tres archivos, la entrada predeterminada,
-argumentos extra, archivo inexistente, datos invalidos y falta de convergencia.
+y el codigo de terminacion: los tres pares de valores, argumentos faltantes o
+extra, datos invalidos y falta de convergencia.
 Cada proceso hereda el agente JaCoCo de Maven, de modo que sus ejecuciones se
 incorporan al reporte sin que `System.exit` cierre JUnit.
 
@@ -107,7 +106,7 @@ el codigo de salida. Tambien quedan sin ejecutar los constructores implicitos
 de las clases que solo contienen metodos estaticos. No hay exclusiones de clases
 para aumentar la cobertura.
 
-| Archivo | x | dof | Esperado (5 decimales) |
+| Entrada | x | dof | Esperado (5 decimales) |
 |---|---:|---:|---:|
 | datos/test1.txt | 1.1 | 9 | 0.35006 |
 | datos/test2.txt | 1.1812 | 10 | 0.36757 |

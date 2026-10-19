@@ -1,0 +1,4 @@
+x: 2.75
+dof: 30
+Integral de 0 a x: 0.49499986
+Resultado a 5 decimales: 0.49500
