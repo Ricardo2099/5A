@@ -25,7 +25,7 @@ public class SimpsonTest {
 
     @Test
     void caso2DelPdf() {
-        assertEquals(0.36757, calcular(1.1812, 10), 0.000005);
+        assertEquals(0.36757, calcular(-1.1812, 10), 0.000005);
     }
 
     @Test
