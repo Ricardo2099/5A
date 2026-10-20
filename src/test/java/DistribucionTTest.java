@@ -10,7 +10,7 @@ public class DistribucionTTest {
     @ParameterizedTest
     @ValueSource(doubles = {Double.NaN, Double.POSITIVE_INFINITY, 0, -1, 172})
     void rechazaArgumentosFueraDelDominioGamma(double z) {
-        assertThrows(IllegalArgumentException.class, () -> DistribucionT.gamma(z));
+        assertThrows(IllegalArgumentException.class, () -> Gamma.gamma(z));
     }
 
     @ParameterizedTest
@@ -26,27 +26,27 @@ public class DistribucionTTest {
 
     @Test
     void gammaEntera() {
-        assertEquals(24, DistribucionT.gamma(5), 1e-12);
+        assertEquals(24, Gamma.gamma(5), 1e-12);
     }
 
     @Test
     void gammaSemientera() {
-        assertEquals(11.63172839656745, DistribucionT.gamma(4.5), 1e-12);
+        assertEquals(11.63172839656745, Gamma.gamma(4.5), 1e-12);
     }
 
     @Test
     void gammaUnMedio() {
-        assertEquals(Math.sqrt(Math.PI), DistribucionT.gamma(0.5), 1e-12);
+        assertEquals(Math.sqrt(Math.PI), Gamma.gamma(0.5), 1e-12);
     }
 
     @Test
     void gammaUno() {
-        assertEquals(1, DistribucionT.gamma(1), 0);
+        assertEquals(1, Gamma.gamma(1), 0);
     }
 
     @Test
     void rechazaGammaNoSemientera() {
-        assertThrows(IllegalArgumentException.class, () -> DistribucionT.gamma(1.2));
+        assertThrows(IllegalArgumentException.class, () -> Gamma.gamma(1.2));
     }
 
     @Test

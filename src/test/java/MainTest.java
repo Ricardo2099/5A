@@ -50,50 +50,47 @@ public class MainTest {
         }
     }
 
-    @ParameterizedTest
-    @CsvSource({"datos/test1.txt,1.1,9,0.35005864,0.35006",
-            "datos/test2.txt,1.1812,10,0.36757341,0.36757",
-            "datos/test3.txt,2.75,30,0.49499986,0.49500"})
-    void muestraResultadoDelArchivo(String archivo, String x, String dof,
+        @ParameterizedTest
+        @CsvSource({"1.1,9,0.35005864,0.35006",
+            "1.1812,10,0.36757341,0.36757",
+            "2.75,30,0.49499986,0.49500"})
+        void muestraResultado(String x, String dof,
             String integral, String redondeado) throws Exception {
-        String esperado = "Archivo: " + archivo + "\nx: " + x + "\ndof: " + dof
+        String esperado = "x: " + x + "\ndof: " + dof
                 + "\nIntegral de 0 a x: " + integral
-                + "\nResultado a 5 decimales: " + redondeado + "\n";
-        assertEquals(new Resultado(0, esperado), ejecutar(archivo));
+            + "\nResultado a 5 decimales: " + redondeado
+            + "\nResultado generado en: resultado.txt\n";
+        assertEquals(new Resultado(0, esperado), ejecutar(x, dof));
     }
 
     @Test
-    void usaPrimerArchivoSinArgumentos() throws Exception {
-        assertEquals(new Resultado(0, "Archivo: datos/test1.txt\nx: 1.1\ndof: 9\n"
-                + "Integral de 0 a x: 0.35005864\nResultado a 5 decimales: 0.35006\n"), ejecutar());
+        void informaFaltaDeArgumentos() throws Exception {
+        assertEquals(new Resultado(1, "Uso: java -cp target/classes Main <x> <dof>\n"), ejecutar());
     }
 
     @Test
     void informaUsoConArgumentosExtra() throws Exception {
-        assertEquals(new Resultado(1, "Uso: java -cp target/classes Main [datos/test1.txt]\n"),
-                ejecutar("datos/test1.txt", "extra"));
+        assertEquals(new Resultado(1, "Uso: java -cp target/classes Main <x> <dof>\n"),
+            ejecutar("1.1", "9", "extra"));
     }
 
     @Test
-    void informaArchivoInexistente() throws Exception {
-        Resultado resultado = ejecutar(carpeta.resolve("ausente.txt").toString());
-        assertTrue(resultado.codigo() == 1 && resultado.salida().startsWith("Error: ")
-                && resultado.salida().contains("ausente.txt"));
-    }
-
-    @Test
-    void informaDatosInvalidos() throws Exception {
-        Path archivo = carpeta.resolve("invalido.txt");
-        Files.writeString(archivo, "1.1\n9.5\n");
+        void informaDatosInvalidos() throws Exception {
         assertEquals(new Resultado(1, "Error: x debe ser numerico y dof debe ser entero.\n"),
-                ejecutar(archivo.toString()));
+            ejecutar("texto", "10"));
+    }
+
+    @Test
+        void informaDofNoEntero() throws Exception {
+        assertEquals(new Resultado(1, "Error: x debe ser numerico y dof debe ser entero.\n"),
+            ejecutar("1.1", "9.5"));
     }
 
     @Test
     void informaFaltaDeConvergencia() throws Exception {
-        Path archivo = carpeta.resolve("grande.txt");
-        Files.writeString(archivo, "1e20\n9\n");
+        String x = "1e20";
+        String dof = "9";
         assertEquals(new Resultado(1, "Error: No se alcanzo la tolerancia con el limite de segmentos.\n"),
-                ejecutar(archivo.toString()));
+            ejecutar(x, dof));
     }
 }
